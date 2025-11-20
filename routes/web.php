@@ -3,10 +3,12 @@
 use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Features;
 use Livewire\Volt\Volt;
+use App\Http\Controllers\GameController;
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('home');
 })->name('home');
+
 
 Route::view('dashboard', 'dashboard')
     ->middleware(['auth', 'verified'])
@@ -29,4 +31,12 @@ Route::middleware(['auth'])->group(function () {
             ),
         )
         ->name('two-factor.show');
+
+    Route::get('/games/create', [GameController::class, 'create'])->name('games.create');
+    Route::post('/games', [GameController::class, 'store'])->name('games.store');
 });
+
+Route::get('/games', [GameController::class, 'index'])->name('games.index');
+Route::get('/games/{game}', [GameController::class, 'show'])->name('games.show');
+
+
