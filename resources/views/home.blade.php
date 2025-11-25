@@ -34,8 +34,8 @@
                 </form>
             </div>
 
-            <div class="w-48">
-                <img src="{{ asset('images/hero-placeholder.png') }}" alt="Games" class="rounded shadow" />
+            <div class="w-48 bg-gray-200 h-40 rounded shadow flex items-center justify-center">
+                <span class="text-gray-400">Game Image</span>
             </div>
         </div>
     </section>
