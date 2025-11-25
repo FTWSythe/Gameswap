@@ -6,7 +6,7 @@ use Livewire\Volt\Volt;
 use App\Http\Controllers\GameController;
 
 Route::get('/', function () {
-    return view('home');
+    return view('welcome');
 })->name('home');
 
 
