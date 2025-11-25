@@ -71,6 +71,6 @@ jobs:
         run: npm run build
 
       - name: Tests
-        run: php vendor/bin/pest --timeout=60
+        run: php vendor/bin/pest
         env:
           PEST_BROWSER_TIMEOUT: 20000
