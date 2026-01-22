@@ -23,6 +23,12 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'bio',
+        'avatar_url',
+        'banner_url',
+        'quote',
+        'is_admin',
+        'is_blocked',
     ];
 
     /**
@@ -50,6 +56,26 @@ class User extends Authenticatable
         ];
     }
 
+    public function games()
+    {
+        return $this->hasMany(Game::class);
+    }
+
+    public function sentTrades()
+    {
+        return $this->hasMany(Trade::class, 'requester_id');
+    }
+
+    public function receivedTrades()
+    {
+        return $this->hasMany(Trade::class, 'game_owner_id');
+    }
+
+    public function feedback()
+    {
+        return $this->hasMany(Feedback::class, 'to_user_id');
+    }
+
     /**
      * Get the user's initials
      */
@@ -60,10 +86,5 @@ class User extends Authenticatable
             ->take(2)
             ->map(fn ($word) => Str::substr($word, 0, 1))
             ->implode('');
-    }
-
-    public function games()
-    {
-        return $this->hasMany(Game::class);
     }
 }
