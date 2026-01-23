@@ -27,7 +27,11 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middl
 
 Route::get('dashboard', function () {
     $games = \App\Models\Game::where('is_blocked', false)->latest()->limit(12)->get();
-    return view('dashboard', compact('games'));
+    $totalGames = \App\Models\Game::where('is_blocked', false)->count();
+    $userListings = Auth::user()->games->count();
+    $userProfileViews = Auth::user()->profile_views ?? 0;
+    
+    return view('dashboard', compact('games', 'totalGames', 'userListings', 'userProfileViews'));
 })->middleware(['auth', 'verified'])
     ->name('dashboard');
 
@@ -73,6 +77,10 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
 });
 
 Route::get('/users/{user}', function (\App\Models\User $user) {
+    // Increment profile views (don't count self-views)
+    if (Auth::guest() || Auth::user()->id !== $user->id) {
+        $user->increment('profile_views');
+    }
     return view('profile.show', ['user' => $user]);
 })->name('profile.user');
 

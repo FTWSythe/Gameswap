@@ -65,15 +65,15 @@
         <section class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
             <div class="bg-gray-800 rounded-lg p-6 border border-gray-700">
                 <h3 class="text-gray-400 text-sm font-semibold mb-2">TOTAL GAMES</h3>
-                <p class="text-4xl font-bold text-white">12</p>
+                <p class="text-4xl font-bold text-white">{{ $totalGames ?? 0 }}</p>
             </div>
             <div class="bg-gray-800 rounded-lg p-6 border border-gray-700">
                 <h3 class="text-gray-400 text-sm font-semibold mb-2">YOUR LISTINGS</h3>
-                <p class="text-4xl font-bold text-white">3</p>
+                <p class="text-4xl font-bold text-white">{{ $userListings ?? 0 }}</p>
             </div>
             <div class="bg-gray-800 rounded-lg p-6 border border-gray-700">
                 <h3 class="text-gray-400 text-sm font-semibold mb-2">PROFILE VIEWS</h3>
-                <p class="text-4xl font-bold text-white">24</p>
+                <p class="text-4xl font-bold text-white">{{ $userProfileViews ?? 0 }}</p>
             </div>
         </section>
         @endauth
