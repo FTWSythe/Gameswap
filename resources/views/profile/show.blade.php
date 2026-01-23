@@ -1,4 +1,4 @@
-<x-layouts.gameswap :title="__('My Profile')">
+<x-layouts.gameswap :title="$user->name ?? __('My Profile')">
     <div class="container mx-auto py-12 px-4">
         <!-- Profile Header Section -->
         <section class="mb-12">
@@ -15,22 +15,28 @@
                         
                         <div class="flex-1">
                             <h1 class="text-4xl font-bold mb-2">
-                                {{ Auth::user()->name }}
-                                @if (Auth::user()->is_admin)
+                                {{ $user->name ?? Auth::user()->name }}
+                                @if (($user->is_admin ?? Auth::user()->is_admin))
                                     <span class="ml-3 px-3 py-1 bg-yellow-900 text-yellow-400 text-lg font-semibold rounded-full inline-block">Admin</span>
                                 @endif
                             </h1>
-                            <p class="text-gray-200 text-sm mb-2">{{ Auth::user()->email }}</p>
-                            @if (Auth::user()->quote)
-                                <p class="text-gray-100 italic mb-4 max-w-2xl">{{ Auth::user()->quote }}</p>
+                            <p class="text-gray-200 text-sm mb-2">{{ $user->email ?? Auth::user()->email }}</p>
+                            @if (($user->quote ?? Auth::user()->quote))
+                                <p class="text-gray-100 italic mb-4 max-w-2xl">{{ $user->quote ?? Auth::user()->quote }}</p>
                             @endif
                             <div class="flex gap-4">
-                                <a href="{{ route('profile.edit') }}" class="px-4 py-2 bg-white text-blue-600 font-semibold rounded-full hover:bg-gray-100 transition">
-                                    Edit Profile
-                                </a>
-                                <a href="{{ route('games.create') }}" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-full transition">
-                                    List Game
-                                </a>
+                                @if(!$user || Auth::check() && Auth::user()->id === $user->id)
+                                    <a href="{{ route('profile.edit') }}" class="px-4 py-2 bg-white text-blue-600 font-semibold rounded-full hover:bg-gray-100 transition">
+                                        Edit Profile
+                                    </a>
+                                    <a href="{{ route('games.create') }}" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-full transition">
+                                        List Game
+                                    </a>
+                                @elseif(Auth::check())
+                                    <a href="{{ route('games.index', ['user' => $user->id]) }}" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-full transition">
+                                        View Games
+                                    </a>
+                                @endif
                             </div>
                         </div>
                     </div>
@@ -50,9 +56,9 @@
 
         <!-- Your Games Section -->
         <section class="mb-12">
-            <h2 class="text-3xl font-bold text-white mb-6">Your Games</h2>
+            <h2 class="text-3xl font-bold text-white mb-6">{{ ($user && $user->id !== Auth::user()?->id) ? 'Games' : 'Your Games' }}</h2>
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
-                @forelse (Auth::user()->games ?? [] as $game)
+                @forelse (($user ?? Auth::user())->games ?? [] as $game)
                     <div class="bg-gray-800 rounded-lg overflow-hidden hover:transform hover:scale-105 transition duration-300 cursor-pointer border border-gray-700">
                         <div class="w-full h-40 bg-gradient-to-br from-gray-700 to-gray-600 flex items-center justify-center">
                             <span class="text-gray-400 text-sm">Game Image</span>
@@ -67,10 +73,12 @@
                     </div>
                 @empty
                     <div class="col-span-5 bg-gray-800 rounded-lg p-12 border border-gray-700 text-center">
-                        <p class="text-gray-400 mb-4">You haven't listed any games yet</p>
-                        <a href="{{ route('games.create') }}" class="inline-block px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold rounded-full transition">
-                            List Your First Game
-                        </a>
+                        <p class="text-gray-400 mb-4">{{ ($user && $user->id !== Auth::user()?->id) ? 'This user hasn\'t listed any games' : 'You haven\'t listed any games yet' }}</p>
+                        @if(!$user || Auth::check() && Auth::user()->id === $user->id)
+                            <a href="{{ route('games.create') }}" class="inline-block px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold rounded-full transition">
+                                List Your First Game
+                            </a>
+                        @endif
                     </div>
                 @endforelse
             </div>
@@ -99,7 +107,7 @@
         <section class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
             <div class="bg-gray-800 rounded-lg p-6 border border-gray-700">
                 <h3 class="text-gray-400 text-sm font-semibold mb-2">TOTAL GAMES</h3>
-                <p class="text-4xl font-bold text-white">{{ Auth::user()->games->count() ?? 0 }}</p>
+                <p class="text-4xl font-bold text-white">{{ ($user ?? Auth::user())->games->count() ?? 0 }}</p>
             </div>
             <div class="bg-gray-800 rounded-lg p-6 border border-gray-700">
                 <h3 class="text-gray-400 text-sm font-semibold mb-2">TRADES COMPLETED</h3>

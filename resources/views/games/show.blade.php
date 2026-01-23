@@ -15,7 +15,7 @@
                 <!-- User Card -->
                 <div class="bg-gray-800 rounded-lg border border-gray-700 p-6 mb-6">
                     <h3 class="text-white font-semibold mb-4">Seller</h3>
-                    <a href="{{ route('profile.show') }}" class="flex items-center gap-4 mb-4">
+                    <a href="{{ route('profile.user', $game->user) }}" class="flex items-center gap-4 mb-4">
                         <div class="w-12 h-12 bg-gradient-to-br from-blue-400 to-purple-400 rounded-full flex items-center justify-center">
                             <span class="text-white font-bold">{{ substr($game->user->name, 0, 1) }}</span>
                         </div>

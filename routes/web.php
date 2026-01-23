@@ -35,7 +35,7 @@ Route::middleware(['auth'])->group(function () {
     Route::redirect('settings', 'settings/profile');
 
     Route::get('/profile', function () {
-        return view('profile.show');
+        return view('profile.show', ['user' => Auth::user()]);
     })->name('profile.show');
 
     Volt::route('settings/profile', 'settings.profile', ['layout' => 'layouts.blank'])->name('profile.edit');
@@ -71,5 +71,9 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::post('/games/{game}/toggle-block', [AdminController::class, 'toggleGameBlock'])->name('games.toggle-block');
     Route::delete('/games/{game}', [AdminController::class, 'destroyGame'])->name('games.destroy');
 });
+
+Route::get('/users/{user}', function (\App\Models\User $user) {
+    return view('profile.show', ['user' => $user]);
+})->name('profile.user');
 
 
