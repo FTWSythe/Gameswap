@@ -29,17 +29,41 @@
                 <!-- Action Buttons -->
                 @auth
                     @if(Auth::user()->id !== $game->user->id)
-                        <form action="{{ route('trades.store') }}" method="POST" class="space-y-3">
-                            @csrf
-                            <input type="hidden" name="requested_game_id" value="{{ $game->id }}">
-                            
-                            <button
-                                type="submit"
-                                class="w-full py-3 px-4 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold rounded-full transition"
-                            >
-                                Send Trade Request
-                            </button>
-                        </form>
+                        @if(Auth::user()->games->count() > 0)
+                            <form action="{{ route('trades.store') }}" method="POST" class="space-y-3">
+                                @csrf
+                                <input type="hidden" name="requested_game_id" value="{{ $game->id }}">
+                                
+                                <div>
+                                    <label for="offered_game_id" class="block text-white font-semibold mb-2">Select a game to trade:</label>
+                                    <select 
+                                        id="offered_game_id"
+                                        name="offered_game_id" 
+                                        required 
+                                        class="w-full py-3 px-4 bg-gray-700 border border-gray-600 text-white rounded-full focus:outline-none focus:border-blue-500 transition"
+                                    >
+                                        <option value="">-- Choose a game from your collection --</option>
+                                        @foreach(Auth::user()->games as $userGame)
+                                            <option value="{{ $userGame->id }}">{{ $userGame->title }} ({{ $userGame->platform }})</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                
+                                <button
+                                    type="submit"
+                                    class="w-full py-3 px-4 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold rounded-full transition"
+                                >
+                                    Send Trade Request
+                                </button>
+                            </form>
+                        @else
+                            <div class="bg-yellow-900 border border-yellow-700 rounded-lg p-4">
+                                <p class="text-yellow-100">You need to list at least one game before you can initiate a trade.</p>
+                                <a href="{{ route('games.create') }}" class="inline-block mt-3 px-4 py-2 bg-yellow-700 hover:bg-yellow-600 text-white font-semibold rounded transition">
+                                    List Your First Game
+                                </a>
+                            </div>
+                        @endif
                     @else
                         <div class="flex gap-3">
                             <a href="{{ route('games.edit', $game) }}" class="flex-1 py-3 px-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-full text-center transition">

@@ -35,22 +35,34 @@ class TradeController extends Controller
     {
         $validated = $request->validate([
             'requested_game_id' => 'required|exists:games,id',
-            'offered_game_id' => 'nullable|exists:games,id',
+            'offered_game_id' => 'required|exists:games,id',
             'message' => 'nullable|string|max:500',
         ]);
 
-        $game = Game::findOrFail($validated['requested_game_id']);
+        $requestedGame = Game::findOrFail($validated['requested_game_id']);
+        $offeredGame = Game::findOrFail($validated['offered_game_id']);
 
-        if ($game->user_id === auth()->id()) {
-            return back()->with('error', 'You cannot trade with yourself!');
+        // Check if the user is trying to trade with themselves
+        if ($requestedGame->user_id === auth()->id()) {
+            return back()->with('error', 'You cannot trade your own game!');
+        }
+
+        // Check if the offered game belongs to the authenticated user
+        if ($offeredGame->user_id !== auth()->id()) {
+            return back()->with('error', 'You can only trade games from your own collection!');
+        }
+
+        // Check if the offered game is the same as the requested game
+        if ($validated['requested_game_id'] === $validated['offered_game_id']) {
+            return back()->with('error', 'You cannot trade the same game!');
         }
 
         Trade::create([
             'requester_id' => auth()->id(),
-            'game_owner_id' => $game->user_id,
+            'game_owner_id' => $requestedGame->user_id,
             'requested_game_id' => $validated['requested_game_id'],
             'offered_game_id' => $validated['offered_game_id'],
-            'message' => $validated['message'],
+            'message' => $validated['message'] ?? null,
             'status' => 'pending',
         ]);
 

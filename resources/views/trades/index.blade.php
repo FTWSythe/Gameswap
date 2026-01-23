@@ -1,4 +1,7 @@
 <x-layouts.gameswap :title="__('My Trades')">
+    <!-- Trade Complete Modal -->
+    <x-trade-complete-modal />
+    
     <div class="container mx-auto py-12 px-4">
         <!-- Page Header -->
         <section class="mb-12">
