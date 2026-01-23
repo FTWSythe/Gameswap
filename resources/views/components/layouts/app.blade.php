@@ -3,3 +3,5 @@
         {{ $slot }}
     </flux:main>
 </x-layouts.app.sidebar>
+<!-- Chat Widget -->
+<x-chat-widget />

@@ -66,9 +66,9 @@
                         <div class="p-4">
                             <h4 class="text-white font-semibold text-sm mb-2">{{ $game->title }}</h4>
                             <p class="text-gray-400 text-xs mb-3">{{ $game->platform }}</p>
-                            <button class="w-full px-3 py-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white text-sm font-semibold rounded transition">
+                            <a href="{{ route('games.show', $game) }}" class="block w-full px-3 py-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white text-sm font-semibold rounded text-center transition">
                                 Manage
-                            </button>
+                            </a>
                         </div>
                     </div>
                 @empty
